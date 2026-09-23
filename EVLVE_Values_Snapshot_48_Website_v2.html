@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EVLVE Values Snapshot</title>
+<style>
+:root {
+  --bg:#f6f3ee; --card:#ffffff; --text:#181716; --muted:#6e6861;
+  --line:#ded8cf; --accent:#25201c; --soft:#ece6de; --soft2:#f2eee8;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,a{font:inherit}
+.wrap{width:min(760px,calc(100% - 28px));margin:0 auto;padding:28px 0 56px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:clamp(22px,5vw,38px)}
+.eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:700}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:clamp(32px,7vw,54px);line-height:1.02;letter-spacing:-.035em;margin:10px 0 16px}
+h2{font-size:clamp(27px,5vw,39px);line-height:1.07;letter-spacing:-.025em}
+h3{font-size:20px;margin-bottom:10px}
+.lead{font-size:18px;line-height:1.65;color:var(--muted)}
+.meta{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:24px 0}
+.meta div{background:var(--soft);border-radius:16px;padding:14px;text-align:center}
+.meta strong{display:block;font-size:18px}
+.meta span{font-size:12px;color:var(--muted)}
+.primary,.option,.ghost,.cta{min-height:48px;border-radius:14px;border:1px solid var(--line);cursor:pointer}
+.primary{width:100%;background:var(--accent);color:#fff;padding:13px 18px;border-color:var(--accent);font-weight:700}
+.cta{display:block;text-align:center;text-decoration:none;width:100%;background:var(--accent);color:#fff;padding:14px 18px;border-color:var(--accent);font-weight:700;margin-top:14px}
+.ghost{background:transparent;padding:11px 16px}
+.topline{display:flex;justify-content:space-between;gap:16px;color:var(--muted);font-size:13px;margin-bottom:9px}
+.track{height:7px;background:var(--soft);border-radius:999px;overflow:hidden;margin-bottom:18px}
+.fill{height:100%;background:var(--accent);width:0;transition:width .25s ease}
+.question{font-size:clamp(23px,4.8vw,34px);line-height:1.25;letter-spacing:-.02em;margin-bottom:22px}
+.options{display:grid;gap:10px}
+.option{width:100%;background:#fff;padding:15px 16px;text-align:left;line-height:1.45}
+.option:hover{background:#faf8f5}
+.option:focus,.primary:focus,.ghost:focus,.cta:focus{outline:3px solid #b9ada0;outline-offset:2px}
+.actions{margin-top:14px;display:flex;justify-content:flex-start}
+.hidden{display:none!important}
+.section-intro{margin-bottom:16px;color:var(--muted);font-size:14px;line-height:1.55}
+.values-line{font-size:clamp(25px,5vw,38px);line-height:1.25;letter-spacing:-.025em;margin:12px 0 22px}
+.values-line span:not(:last-child)::after{content:" · ";color:#a89f94}
+.value-list{display:grid;gap:12px;margin-top:18px}
+.value-item{background:var(--soft2);border-radius:18px;padding:17px 18px}
+.value-item-top{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.value-name{font-weight:750;font-size:18px}
+.value-score{font-size:13px;color:var(--muted)}
+.value-copy{font-size:14px;line-height:1.55;color:var(--muted);margin:7px 0 0}
+.callout{background:var(--soft);border-radius:20px;padding:20px;margin-top:16px}
+.result-section{margin-top:14px}
+.simple-highlight{font-size:21px;line-height:1.45;margin:4px 0 10px;font-weight:650}
+.small{font-size:13px;line-height:1.6;color:var(--muted)}
+.tag-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.tag{background:var(--soft);border-radius:999px;padding:8px 11px;font-size:13px}
+.note{border-left:3px solid var(--accent);padding-left:14px;margin-top:14px;color:var(--muted);line-height:1.6}
+@media(max-width:560px){
+  .meta{grid-template-columns:1fr}
+  .wrap{width:min(100% - 20px,760px);padding-top:10px}
+  .card{border-radius:18px;padding:20px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <section id="intro" class="card">
+    <div class="eyebrow">EVLVE</div>
+    <h1>Values Snapshot</h1>
+    <p class="lead">Not just what you say matters — what your life repeatedly reveals.</p>
+
+    <div class="meta">
+      <div><strong>48</strong><span>questions</span></div>
+      <div><strong>~8 min</strong><span>to complete</span></div>
+      <div><strong>Instant</strong><span>results</span></div>
+    </div>
+
+    <p class="small">Answer from your first honest reaction. Choose what is most true of your actual life right now — not what you wish were true, and not what you think should be true.</p>
+    <button class="primary" id="start" type="button">Begin</button>
+  </section>
+
+  <section id="quiz" class="hidden">
+    <div class="topline"><span id="count"></span><span id="section"></span></div>
+    <div class="track"><div class="fill" id="progress"></div></div>
+
+    <div class="card">
+      <div id="sectionIntro" class="section-intro hidden"></div>
+      <h2 class="question" id="qtext"></h2>
+      <div class="options" id="options"></div>
+      <div class="actions"><button class="ghost" id="back" type="button">Back</button></div>
+    </div>
+  </section>
+
+  <section id="results" class="hidden">
+    <div class="card">
+      <div class="eyebrow">Your Values Snapshot</div>
+      <h2 style="margin-top:9px;margin-bottom:5px">Your Core Values</h2>
+      <div id="coreValuesLine" class="values-line"></div>
+      <p class="lead" style="font-size:16px">These are the priorities showing up most strongly across what you say matters, the choices you make, and the patterns your life currently reveals.</p>
+      <div id="coreValueCards" class="value-list"></div>
+    </div>
+
+    <div class="card result-section">
+      <div class="eyebrow">What Your Life Is Showing</div>
+      <div id="livedHeadline" class="simple-highlight"></div>
+      <p id="livedCopy" class="lead" style="font-size:16px"></p>
+      <div id="livedTags" class="tag-row"></div>
+    </div>
+
+    <div class="card result-section">
+      <div class="eyebrow">Where There May Be a Gap</div>
+      <div id="gapHeadline" class="simple-highlight"></div>
+      <p id="gapCopy" class="lead" style="font-size:16px"></p>
+      <div class="note">A gap does not mean a value is fake. It may be aspirational, under-expressed, constrained by your current circumstances, or competing with another priority.</div>
+    </div>
+
+    <div class="card result-section">
+      <div class="eyebrow">One More Thing to Notice</div>
+      <p id="driverCopy" class="lead" style="font-size:16px;margin-bottom:0"></p>
+    </div>
+
+    <div class="card result-section">
+      <div class="eyebrow">Go Deeper</div>
+      <h3 style="font-size:26px;margin-top:8px">What’s Your BS?</h3>
+      <p class="lead" style="font-size:16px">Your Values Snapshot shows <strong>what</strong> appears to matter and what your life is currently reinforcing. The next question is <strong>why</strong>: which beliefs, expectations, identities, and patterns may be shaping what you actually choose?</p>
+      <a class="cta" id="courseLink" href="#" rel="noopener">Go deeper inside What’s Your BS?</a>
+      <p class="small" style="margin-top:10px">Website setup note: replace <strong>YOUR_COURSE_URL</strong> in the code with your actual course or signup link.</p>
+    </div>
+
+    <button class="primary" id="restart" type="button" style="margin-top:14px">Take it again</button>
+  </section>
+</div>
+
+<script>
+const COURSE_URL = "YOUR_COURSE_URL";
+const QUESTIONS = [{"section": "What You Say Matters", "kind": "Declared", "text": "I want enough practical and financial margin that unexpected events do not immediately destabilize me.", "options": [{"label": "Very true of me", "scores": {"Grounding": 3}}, {"label": "Somewhat true of me", "scores": {"Grounding": 2}}, {"label": "Not very true of me", "scores": {"Grounding": 1}}, {"label": "Not true of me", "scores": {"Grounding": 0}}], "shuffle": false}, {"section": "What You Say Matters", "kind": "Declared", "text": "I value having reserves of time, money, or energy rather than operating at the edge.", "options": [{"label": "Very true of me", "scores": {"Grounding": 3}}, {"label": "Somewhat true of me", "scores": {"Grounding": 2}}, {"label": "Not very true of me", "scores": {"Grounding": 1}}, {"label": "Not true of me", "scores": {"Grounding": 0}}], "shuffle": false}, {"section": "What You Say Matters", "kind": "Declared", "text": "I want the people closest to me to know they can count on me.", "options": [{"label": "Very true of me", "scores": {"Belonging": 3}}, {"label": "Somewhat true of me", "scores": {"Belonging": 2}}, {"label": "Not very true of me", "scores": {"Belonging": 1}}, {"label": "Not true of me", "scores": {"Belonging": 0}}], "shuffle": false}, {"section": "What You Say Matters", "kind": "Declared", "text": "I value loyalty even when easier options are available.", "options": [{"label": "Very true of me", "scores": {"Belonging": 3}}, {"label": "Somewhat true of me", "scores": {"Belonging": 2}}, {"label": "Not very true of me", "scores": {"Belonging": 1}}, {"label": "Not true of me", "scores": {"Belonging": 0}}], "shuffle": false}, {"section": "What You Say Matters", "kind": "Declared", "text": "I want the freedom to decide how I use my time.", "options": [{"label": "Very true of me", "scores": {"Sovereignty": 3}}, {"label": "Somewhat true of me", "scores": {"Sovereignty": 2}}, {"label": "Not very true of me", "scores": {"Sovereignty": 1}}, {"label": "Not true of me", "scores": {"Sovereignty": 0}}], "shuffle": false}, {"section": "What You Say Matters", "kind": "Declared", "text": "I want my commitments to come from conscious choice rather than pressure.", "options": [{"label": "Very true of me", "scores": {"Sovereignty": 3}}, {"label": "Somewhat true of me", "scores": {"Sovereignty": 2}}, {"label": "Not very true of me", "scores": {"Sovereignty": 1}}, {"label": "Not true of me", "scores": {"Sovereignty": 0}}], "shuffle": false}, {"section": "What You Say Matters", "kind": "Declared", "text": "I feel deeply satisfied when I become genuinely skilled at something difficult.", "options": [{"label": "Very true of me", "scores": {"Mastery": 3}}, {"label": "Somewhat true of me", "scores": {"Mastery": 2}}, {"label": "Not very true of me", "scores": {"Mastery": 1}}, {"label": "Not true of me", "scores": {"Mastery": 0}}], "shuffle": false}, {"section": "What You Say Matters", "kind": "Declared", "text": "I care about doing work to a standard I respect.", "options": [{"label": "Very true of me", "scores": {"Mastery": 3}}, {"label": "Somewhat true of me", "scores": {"Mastery": 2}}, {"label": "Not very true of me", "scores": {"Mastery": 1}}, {"label": "Not true of me", "scores": {"Mastery": 0}}], "shuffle": false}, {"section": "What You Say Matters", "kind": "Declared", "text": "I want relationships where giving and receiving can both exist.", "options": [{"label": "Very true of me", "scores": {"Reciprocity": 3}}, {"label": "Somewhat true of me", "scores": {"Reciprocity": 2}}, {"label": "Not very true of me", "scores": {"Reciprocity": 1}}, {"label": "Not true of me", "scores": {"Reciprocity": 0}}], "shuffle": false}, {"section": "What You Say Matters", "kind": "Declared", "text": "I value influence that leaves room for another person’s agency.", "options": [{"label": "Very true of me", "scores": {"Reciprocity": 3}}, {"label": "Somewhat true of me", "scores": {"Reciprocity": 2}}, {"label": "Not very true of me", "scores": {"Reciprocity": 1}}, {"label": "Not true of me", "scores": {"Reciprocity": 0}}], "shuffle": false}, {"section": "What You Say Matters", "kind": "Declared", "text": "I naturally look for the larger system behind a recurring problem.", "options": [{"label": "Very true of me", "scores": {"Integration": 3}}, {"label": "Somewhat true of me", "scores": {"Integration": 2}}, {"label": "Not very true of me", "scores": {"Integration": 1}}, {"label": "Not true of me", "scores": {"Integration": 0}}], "shuffle": false}, {"section": "What You Say Matters", "kind": "Declared", "text": "I care about whether the life I am building feels internally coherent.", "options": [{"label": "Very true of me", "scores": {"Integration": 3}}, {"label": "Somewhat true of me", "scores": {"Integration": 2}}, {"label": "Not very true of me", "scores": {"Integration": 1}}, {"label": "Not true of me", "scores": {"Integration": 0}}], "shuffle": false}, {"section": "Your Life Leaves Clues", "kind": "Life Evidence", "text": "What tends to fill the spaces you personally control?", "options": [{"label": "Comfort, practical necessities, and things that make life feel stable and secure", "scores": {"Grounding": 3}}, {"label": "Photos, keepsakes, family items, traditions, or reminders of people I love", "scores": {"Belonging": 3}}, {"label": "Things that express my individuality, freedom, taste, travels, or personal choices", "scores": {"Sovereignty": 3}}, {"label": "Tools, equipment, work materials, achievements, or things connected to what I’m building", "scores": {"Mastery": 3}}, {"label": "Things that make people feel welcomed, supported, connected, or cared for", "scores": {"Reciprocity": 3}}, {"label": "Books, ideas, symbols, notes, art, or objects that connect me to meaning and the bigger picture", "scores": {"Integration": 3}}], "shuffle": true}, {"section": "Your Life Leaves Clues", "kind": "Life Evidence", "text": "When your time is genuinely yours, where does it naturally go?", "options": [{"label": "Restoring myself, my health, my home, finances, or practical life", "scores": {"Grounding": 3}}, {"label": "Family, friends, relationships, traditions, or spending time with people close to me", "scores": {"Belonging": 3}}, {"label": "Exploring, traveling, creating, trying something new, or doing whatever I choose", "scores": {"Sovereignty": 3}}, {"label": "Working, improving a skill, accomplishing something, or moving a project forward", "scores": {"Mastery": 3}}, {"label": "Connecting deeply, helping, supporting, collaborating, or showing up for someone", "scores": {"Reciprocity": 3}}, {"label": "Learning, reflecting, researching, thinking, or connecting ideas", "scores": {"Integration": 3}}], "shuffle": true}, {"section": "Your Life Leaves Clues", "kind": "Life Evidence", "text": "What receives the greatest share of your energy?", "options": [{"label": "Keeping life functioning, healthy, safe, and manageable", "scores": {"Grounding": 3}}, {"label": "Maintaining the people and relationships that matter to me", "scores": {"Belonging": 3}}, {"label": "Protecting my freedom and creating a life that feels like mine", "scores": {"Sovereignty": 3}}, {"label": "Building, achieving, improving, producing, or progressing", "scores": {"Mastery": 3}}, {"label": "Understanding people, supporting others, and improving relationships", "scores": {"Reciprocity": 3}}, {"label": "Understanding how things connect and making sense of the larger picture", "scores": {"Integration": 3}}], "shuffle": true}, {"section": "Your Life Leaves Clues", "kind": "Life Evidence", "text": "After necessities are covered, what are you most naturally willing to spend money on?", "options": [{"label": "Savings, health, home, comfort, protection, or greater financial security", "scores": {"Grounding": 3}}, {"label": "Family, loved ones, celebrations, gifts, traditions, or shared experiences", "scores": {"Belonging": 3}}, {"label": "Travel, freedom, experiences, convenience, independence, or personal expression", "scores": {"Sovereignty": 3}}, {"label": "Education, business, tools, expertise, quality, or things that help me advance", "scores": {"Mastery": 3}}, {"label": "Supporting people, generosity, shared experiences, causes, or contribution", "scores": {"Reciprocity": 3}}, {"label": "Learning, books, transformative experiences, ideas, or things that expand how I see life", "scores": {"Integration": 3}}], "shuffle": true}, {"section": "Your Life Leaves Clues", "kind": "Life Evidence", "text": "Which part of your life tends to stay the MOST organized?", "options": [{"label": "My home, health, finances, schedule, or practical responsibilities", "scores": {"Grounding": 3}}, {"label": "Family logistics, relationships, celebrations, or responsibilities to people I love", "scores": {"Belonging": 3}}, {"label": "My personal plans, independence, experiences, or ability to keep options open", "scores": {"Sovereignty": 3}}, {"label": "My work, projects, goals, systems, or things I’m trying to accomplish", "scores": {"Mastery": 3}}, {"label": "Communication, commitments to others, shared plans, or collaborative responsibilities", "scores": {"Reciprocity": 3}}, {"label": "Information, ideas, learning, planning, or the systems I use to understand the bigger picture", "scores": {"Integration": 3}}], "shuffle": true}, {"section": "Your Life Leaves Clues", "kind": "Life Evidence", "text": "Where do you show the MOST natural discipline — without needing someone else to push you?", "options": [{"label": "Protecting my wellbeing, resources, health, home, or stability", "scores": {"Grounding": 3}}, {"label": "Showing up for people I love or responsibilities connected to them", "scores": {"Belonging": 3}}, {"label": "Pursuing freedom, independence, experiences, or something I’ve personally chosen", "scores": {"Sovereignty": 3}}, {"label": "Getting results, becoming better, completing goals, or mastering something", "scores": {"Mastery": 3}}, {"label": "Helping, supporting, communicating, or maintaining healthy relationships", "scores": {"Reciprocity": 3}}, {"label": "Learning, understanding, reflecting, solving complex problems, or pursuing meaning", "scores": {"Integration": 3}}], "shuffle": true}, {"section": "Your Life Leaves Clues", "kind": "Life Evidence", "text": "When nothing urgent is demanding your attention, what does your mind return to?", "options": [{"label": "Security, money, health, home, responsibilities, or what needs to be handled", "scores": {"Grounding": 3}}, {"label": "People I love, relationships, family, memories, or what is happening with others", "scores": {"Belonging": 3}}, {"label": "Possibilities, freedom, experiences, what I really want, or where I could go next", "scores": {"Sovereignty": 3}}, {"label": "Goals, business, projects, improvement, achievement, or what I’m building", "scores": {"Mastery": 3}}, {"label": "People’s feelings, relationship dynamics, fairness, communication, or how I can help", "scores": {"Reciprocity": 3}}, {"label": "Ideas, patterns, meaning, consciousness, the future, or how everything connects", "scores": {"Integration": 3}}], "shuffle": true}, {"section": "Your Life Leaves Clues", "kind": "Life Evidence", "text": "When you imagine your future without intentionally trying to, what appears most often?", "options": [{"label": "Feeling secure, healthy, comfortable, settled, and having enough", "scores": {"Grounding": 3}}, {"label": "A close family, partnership, friendships, home, or life shared with people I love", "scores": {"Belonging": 3}}, {"label": "Freedom, adventure, experiences, choice, and a life designed on my terms", "scores": {"Sovereignty": 3}}, {"label": "Success, accomplishment, influence, expertise, or seeing something I built become real", "scores": {"Mastery": 3}}, {"label": "Deep relationships, contribution, collaboration, helping others, or shared wellbeing", "scores": {"Reciprocity": 3}}, {"label": "A meaningful life where my work, relationships, growth, and purpose fit together", "scores": {"Integration": 3}}], "shuffle": true}, {"section": "Your Life Leaves Clues", "kind": "Life Evidence", "text": "What does your private inner dialogue circle back to most?", "options": [{"label": "Am I safe, prepared, healthy, financially okay, or handling what needs to be handled?", "scores": {"Grounding": 3}}, {"label": "Are the people I love okay? Where do I stand with them? Am I showing up enough?", "scores": {"Belonging": 3}}, {"label": "What do I actually want? Is this really my choice? How do I create more freedom?", "scores": {"Sovereignty": 3}}, {"label": "What should I do next? How can I improve this? Am I making enough progress?", "scores": {"Mastery": 3}}, {"label": "How did that person feel? Was that fair? Did we understand each other?", "scores": {"Reciprocity": 3}}, {"label": "What does this mean? What pattern am I seeing? How does this connect to everything else?", "scores": {"Integration": 3}}], "shuffle": true}, {"section": "Your Life Leaves Clues", "kind": "Life Evidence", "text": "What do you find yourself talking about most when nobody has assigned the topic?", "options": [{"label": "Health, money, home, practical concerns, stability, or how to make life work better", "scores": {"Grounding": 3}}, {"label": "Family, friends, relationships, memories, people, or what’s happening in my circle", "scores": {"Belonging": 3}}, {"label": "Possibilities, travel, freedom, experiences, personal choices, or doing life differently", "scores": {"Sovereignty": 3}}, {"label": "Work, goals, projects, business, performance, strategy, or improvement", "scores": {"Mastery": 3}}, {"label": "Human behavior, relationships, emotions, fairness, connection, or helping people", "scores": {"Reciprocity": 3}}, {"label": "Ideas, systems, psychology, meaning, consciousness, the future, or how things connect", "scores": {"Integration": 3}}], "shuffle": true}, {"section": "Your Life Leaves Clues", "kind": "Life Evidence", "text": "Which situation produces the strongest immediate reaction in you?", "options": [{"label": "Feeling unsafe, unprepared, financially exposed, physically depleted, or out of control", "scores": {"Grounding": 3}}, {"label": "Betrayal, abandonment, exclusion, disloyalty, or losing an important relationship", "scores": {"Belonging": 3}}, {"label": "Being controlled, trapped, restricted, pressured, or prevented from choosing for myself", "scores": {"Sovereignty": 3}}, {"label": "Failure, incompetence, stagnation, poor performance, or watching potential go unused", "scores": {"Mastery": 3}}, {"label": "Unfairness, disrespect, exploitation, being misunderstood, or one-sided relationships", "scores": {"Reciprocity": 3}}, {"label": "Hypocrisy, contradictions, short-sighted decisions, rigid thinking, or things that don’t make sense together", "scores": {"Integration": 3}}], "shuffle": true}, {"section": "Your Life Leaves Clues", "kind": "Life Evidence", "text": "Look at the goals you have actually pursued repeatedly. What theme appears most often?", "options": [{"label": "Creating stability, health, financial security, a home base, or a sustainable life", "scores": {"Grounding": 3}}, {"label": "Building a family, relationship, friendships, legacy, or strong sense of belonging", "scores": {"Belonging": 3}}, {"label": "Creating freedom, independence, adventure, authenticity, or greater choice", "scores": {"Sovereignty": 3}}, {"label": "Achieving, building, mastering, winning, growing, or becoming exceptional at something", "scores": {"Mastery": 3}}, {"label": "Helping, connecting, contributing, improving relationships, or creating something mutually beneficial", "scores": {"Reciprocity": 3}}, {"label": "Understanding, integrating, teaching, evolving, creating meaning, or solving larger systemic problems", "scores": {"Integration": 3}}], "shuffle": true}, {"section": "Patterns in Action", "kind": "Behavioral", "text": "I notice practical risks and resource constraints even when nobody asks me to.", "options": [{"label": "Very often", "scores": {"Grounding": 3}}, {"label": "Often", "scores": {"Grounding": 2}}, {"label": "Sometimes", "scores": {"Grounding": 1}}, {"label": "Rarely or never", "scores": {"Grounding": 0}}], "shuffle": false}, {"section": "Patterns in Action", "kind": "Behavioral", "text": "I notice who is included, who is missing, and how relationships within a group are doing.", "options": [{"label": "Very often", "scores": {"Belonging": 3}}, {"label": "Often", "scores": {"Belonging": 2}}, {"label": "Sometimes", "scores": {"Belonging": 1}}, {"label": "Rarely or never", "scores": {"Belonging": 0}}], "shuffle": false}, {"section": "Patterns in Action", "kind": "Behavioral", "text": "I quickly notice where I do or do not have meaningful choice.", "options": [{"label": "Very often", "scores": {"Sovereignty": 3}}, {"label": "Often", "scores": {"Sovereignty": 2}}, {"label": "Sometimes", "scores": {"Sovereignty": 1}}, {"label": "Rarely or never", "scores": {"Sovereignty": 0}}], "shuffle": false}, {"section": "Patterns in Action", "kind": "Behavioral", "text": "I naturally notice what could be improved, measured, refined, or done more effectively.", "options": [{"label": "Very often", "scores": {"Mastery": 3}}, {"label": "Often", "scores": {"Mastery": 2}}, {"label": "Sometimes", "scores": {"Mastery": 1}}, {"label": "Rarely or never", "scores": {"Mastery": 0}}], "shuffle": false}, {"section": "Patterns in Action", "kind": "Behavioral", "text": "I naturally notice imbalances in who is carrying, receiving, speaking, or being heard.", "options": [{"label": "Very often", "scores": {"Reciprocity": 3}}, {"label": "Often", "scores": {"Reciprocity": 2}}, {"label": "Sometimes", "scores": {"Reciprocity": 1}}, {"label": "Rarely or never", "scores": {"Reciprocity": 0}}], "shuffle": false}, {"section": "Patterns in Action", "kind": "Behavioral", "text": "I naturally notice patterns and connections across situations that other people may treat as separate.", "options": [{"label": "Very often", "scores": {"Integration": 3}}, {"label": "Often", "scores": {"Integration": 2}}, {"label": "Sometimes", "scores": {"Integration": 1}}, {"label": "Rarely or never", "scores": {"Integration": 0}}], "shuffle": false}, {"section": "Patterns in Action", "kind": "Behavioral", "text": "Under stress, I become especially sensitive to control, restriction, dependence, or loss of choice.", "options": [{"label": "Very often", "scores": {"Sovereignty": 3}}, {"label": "Often", "scores": {"Sovereignty": 2}}, {"label": "Sometimes", "scores": {"Sovereignty": 1}}, {"label": "Rarely or never", "scores": {"Sovereignty": 0}}], "shuffle": false}, {"section": "Patterns in Action", "kind": "Behavioral", "text": "Under stress, I often search for a larger frame that helps the situation make sense.", "options": [{"label": "Very often", "scores": {"Integration": 3}}, {"label": "Often", "scores": {"Integration": 2}}, {"label": "Sometimes", "scores": {"Integration": 1}}, {"label": "Rarely or never", "scores": {"Integration": 0}}], "shuffle": false}, {"section": "When Values Collide", "kind": "Tradeoff", "text": "When several good priorities conflict, which consideration is hardest for you to sacrifice?", "options": [{"label": "A stable foundation and enough resources to stay secure", "scores": {"Grounding": 3}}, {"label": "Important relationships, loyalty, and continuity", "scores": {"Belonging": 3}}, {"label": "Freedom to choose my own direction", "scores": {"Sovereignty": 3}}, {"label": "The opportunity to achieve a meaningful result", "scores": {"Mastery": 3}}], "shuffle": true}, {"section": "When Values Collide", "kind": "Tradeoff", "text": "If you can only protect one thing in a difficult decision, what most often wins?", "options": [{"label": "Fairness and the dignity of everyone involved", "scores": {"Reciprocity": 3}}, {"label": "The solution that best fits the whole system over time", "scores": {"Integration": 3}}, {"label": "Freedom and honest self-direction", "scores": {"Sovereignty": 3}}, {"label": "Stability and practical sustainability", "scores": {"Grounding": 3}}], "shuffle": true}, {"section": "When Values Collide", "kind": "Tradeoff", "text": "An exciting opportunity requires a real sacrifice. Which question most influences your answer?", "options": [{"label": "Will this strengthen or weaken the people and commitments I care about?", "scores": {"Belonging": 3}}, {"label": "Will this materially advance something I want to accomplish?", "scores": {"Mastery": 3}}, {"label": "Will this preserve my ability to choose and adapt?", "scores": {"Sovereignty": 3}}, {"label": "How will this affect the larger pattern of my life over time?", "scores": {"Integration": 3}}], "shuffle": true}, {"section": "When Values Collide", "kind": "Tradeoff", "text": "You have limited energy and cannot do everything well. What tends to get protected first?", "options": [{"label": "What keeps life stable and functioning", "scores": {"Grounding": 3}}, {"label": "What important people are depending on me for", "scores": {"Belonging": 3}}, {"label": "The work or goal with the greatest potential result", "scores": {"Mastery": 3}}, {"label": "The relationship or exchange that most needs care and fairness", "scores": {"Reciprocity": 3}}], "shuffle": true}, {"section": "When Values Collide", "kind": "Tradeoff", "text": "Two options are both attractive. Which one has an edge?", "options": [{"label": "The one that gives me more genuine choice", "scores": {"Sovereignty": 3}}, {"label": "The one that creates a stronger measurable outcome", "scores": {"Mastery": 3}}, {"label": "The one that is more mutual and humane", "scores": {"Reciprocity": 3}}, {"label": "The one that remains coherent across the whole system", "scores": {"Integration": 3}}], "shuffle": true}, {"section": "When Values Collide", "kind": "Tradeoff", "text": "When there is no perfect answer, which loss bothers you most?", "options": [{"label": "Losing safety or a dependable foundation", "scores": {"Grounding": 3}}, {"label": "Losing an important bond or sense of belonging", "scores": {"Belonging": 3}}, {"label": "Losing autonomy or becoming trapped", "scores": {"Sovereignty": 3}}, {"label": "Losing the chance to grow, perform, or achieve", "scores": {"Mastery": 3}}], "shuffle": true}, {"section": "Context Matters", "kind": "Context", "text": "At work, when priorities collide, which instinct most often guides you?", "options": [{"label": "Make the workload, resources, and expectations sustainable", "scores": {"Grounding": 3}}, {"label": "Preserve autonomy and room to work in a way that feels genuinely mine", "scores": {"Sovereignty": 3}}, {"label": "Choose the path that produces the strongest result and develops capability", "scores": {"Mastery": 3}}, {"label": "Consider the whole system and long-term consequences", "scores": {"Integration": 3}}], "shuffle": true}, {"section": "Context Matters", "kind": "Context", "text": "In a close relationship, which need becomes most important when something difficult must be decided?", "options": [{"label": "Protect safety, trust, practical stability, and clear boundaries", "scores": {"Grounding": 3}}, {"label": "Protect the bond, commitment, and sense of us", "scores": {"Belonging": 3}}, {"label": "Protect honesty, agency, and each person’s ability to choose freely", "scores": {"Sovereignty": 3}}, {"label": "Protect mutual understanding, dignity, care, and balanced exchange", "scores": {"Reciprocity": 3}}], "shuffle": true}, {"section": "Context Matters", "kind": "Context", "text": "When money feels uncertain, which response becomes strongest?", "options": [{"label": "Reduce risk, preserve resources, and regain predictability", "scores": {"Grounding": 3}}, {"label": "Protect the people I care about, even if I sacrifice personally", "scores": {"Belonging": 3}}, {"label": "Increase performance, income, skill, or strategy", "scores": {"Mastery": 3}}, {"label": "Step back and redesign the larger system producing the problem", "scores": {"Integration": 3}}], "shuffle": true}, {"section": "Context Matters", "kind": "Context", "text": "When resources and opportunities expand, where are you most naturally pulled?", "options": [{"label": "Use the freedom to explore, create, travel, or design life more on my terms", "scores": {"Sovereignty": 3}}, {"label": "Invest in growth, capability, ambitious goals, or higher-quality execution", "scores": {"Mastery": 3}}, {"label": "Contribute, support, collaborate, or improve mutual wellbeing", "scores": {"Reciprocity": 3}}, {"label": "Integrate the new possibilities into a life that remains coherent and meaningful", "scores": {"Integration": 3}}], "shuffle": true}, {"section": "What Are You Moving Toward — or Away From?", "kind": "Toward/Away", "text": "Which is closer to why freedom matters to you?", "options": [{"label": "I love possibility, self-direction, and creating my own path", "scores": {"Sovereignty": 3, "protection": 0}}, {"label": "I am intensely motivated to avoid being controlled", "scores": {"Sovereignty": 3, "protection": 3}}, {"label": "Both motives feel about equally true", "scores": {"Sovereignty": 3, "protection": 1.5}}, {"label": "Neither motive feels especially true", "scores": {}}], "shuffle": false}, {"section": "What Are You Moving Toward — or Away From?", "kind": "Toward/Away", "text": "Which is closer to why close relationships matter to you?", "options": [{"label": "I genuinely enjoy sharing life and creating continuity with people", "scores": {"Belonging": 3, "protection": 0}}, {"label": "I am afraid of ending up alone or disconnected", "scores": {"Belonging": 3, "protection": 3}}, {"label": "Both motives feel about equally true", "scores": {"Belonging": 3, "protection": 1.5}}, {"label": "Neither motive feels especially true", "scores": {}}], "shuffle": false}, {"section": "What Are You Moving Toward — or Away From?", "kind": "Toward/Away", "text": "Which is closer to why achievement matters to you?", "options": [{"label": "I enjoy creating results and discovering what I am capable of", "scores": {"Mastery": 3, "protection": 0}}, {"label": "I fear being ordinary, unsuccessful, or falling behind", "scores": {"Mastery": 3, "protection": 3}}, {"label": "Both motives feel about equally true", "scores": {"Mastery": 3, "protection": 1.5}}, {"label": "Neither motive feels especially true", "scores": {}}], "shuffle": false}, {"section": "What Are You Moving Toward — or Away From?", "kind": "Toward/Away", "text": "Which is closer to why understanding the bigger picture matters to you?", "options": [{"label": "Complexity and connection genuinely fascinate me", "scores": {"Integration": 3, "protection": 0}}, {"label": "I feel uneasy until I can explain what is happening", "scores": {"Integration": 3, "protection": 3}}, {"label": "Both motives feel about equally true", "scores": {"Integration": 3, "protection": 1.5}}, {"label": "Neither motive feels especially true", "scores": {}}], "shuffle": false}, {"section": "The Should Voice", "kind": "Inherited/Should", "text": "How true is this: I hear a strong “should” voice around what success is supposed to look like.", "options": [{"label": "Very true of me", "scores": {"borrowed": 3}}, {"label": "Somewhat true of me", "scores": {"borrowed": 2}}, {"label": "Not very true of me", "scores": {"borrowed": 1}}, {"label": "Not true of me", "scores": {"borrowed": 0}}], "shuffle": false}, {"section": "The Should Voice", "kind": "Inherited/Should", "text": "How true is this: I have caught myself saying “I should” about a goal I repeatedly do not choose when I actually have freedom.", "options": [{"label": "Very true of me", "scores": {"borrowed": 3}}, {"label": "Somewhat true of me", "scores": {"borrowed": 2}}, {"label": "Not very true of me", "scores": {"borrowed": 1}}, {"label": "Not true of me", "scores": {"borrowed": 0}}], "shuffle": false}];
+const LENSES = ["Grounding","Belonging","Sovereignty","Mastery","Reciprocity","Integration"];
+
+const FRIENDLY = {
+  Security: {
+    internal:["Grounding"],
+    copy:"You value stability, dependable resources, wellbeing, and having something solid beneath you."
+  },
+  Connection: {
+    internal:["Belonging","Reciprocity"],
+    copy:"You value meaningful relationships, mutual care, loyalty, and feeling genuinely connected to others."
+  },
+  Freedom: {
+    internal:["Sovereignty"],
+    copy:"You value autonomy, authenticity, choice, and the ability to create life on your own terms."
+  },
+  Growth: {
+    internal:["Mastery"],
+    copy:"You value progress, capability, excellence, and becoming more effective at what matters to you."
+  },
+  Creativity: {
+    internal:["Integration"],
+    copy:"You value ideas, possibility, meaning, pattern recognition, and bringing a larger vision into form."
+  }
+};
+
+const INTRO = {
+  "Your Life Leaves Clues":"Your values leave evidence. They show up in where your time goes, what gets your energy, what stays organized, what you think about, what you protect, and what you pursue."
+};
+
+let index=0, answers=[];
+const $=id=>document.getElementById(id);
+
+function cloneAndShuffle(arr){
+  const a=arr.map(x=>({...x,scores:{...x.scores}}));
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
+  return a;
+}
+
+const runtimeQuestions = QUESTIONS.map(q=>({
+  ...q,
+  options:q.shuffle?cloneAndShuffle(q.options):q.options.map(o=>({...o,scores:{...o.scores}}))
+}));
+
+function render(){
+  const q=runtimeQuestions[index];
+  $("count").textContent=`${index+1} of ${runtimeQuestions.length}`;
+  $("section").textContent=q.section;
+  $("progress").style.width=`${index/runtimeQuestions.length*100}%`;
+  $("qtext").textContent=q.text;
+
+  const si=$("sectionIntro");
+  if((index===0 || runtimeQuestions[index-1].section!==q.section) && INTRO[q.section]){
+    si.textContent=INTRO[q.section];
+    si.classList.remove("hidden");
+  } else {
+    si.classList.add("hidden");
+  }
+
+  const box=$("options");
+  box.innerHTML="";
+  q.options.forEach((o,i)=>{
+    const b=document.createElement("button");
+    b.className="option";
+    b.type="button";
+    b.textContent=o.label;
+    b.onclick=()=>{
+      answers[index]=i;
+      if(index<runtimeQuestions.length-1){ index++; render(); }
+      else finish();
+    };
+    box.appendChild(b);
+  });
+
+  $("back").disabled=index===0;
+}
+
+function maxLens(lens,kinds=null){
+  let m=0;
+  runtimeQuestions.forEach(q=>{
+    if(kinds && !kinds.includes(q.kind)) return;
+    let best=0;
+    q.options.forEach(o=>best=Math.max(best,o.scores[lens]||0));
+    m+=best;
+  });
+  return m;
+}
+
+function combineFriendly(lensScores){
+  const out={};
+  Object.entries(FRIENDLY).forEach(([name,meta])=>{
+    const vals=meta.internal.map(l=>lensScores[l]||0);
+    out[name]=vals.reduce((a,b)=>a+b,0)/vals.length;
+  });
+  return out;
+}
+
+function sortedNames(obj){
+  return Object.keys(obj).sort((a,b)=>obj[b]-obj[a]);
+}
+
+function sentenceList(arr){
+  if(arr.length===1) return arr[0];
+  if(arr.length===2) return arr[0]+" and "+arr[1];
+  return arr.slice(0,-1).join(", ")+", and "+arr[arr.length-1];
+}
+
+function finish(){
+  const raw=Object.fromEntries(LENSES.map(l=>[l,0]));
+  const declared=Object.fromEntries(LENSES.map(l=>[l,0]));
+  const lived=Object.fromEntries(LENSES.map(l=>[l,0]));
+
+  let protection=0, borrowed=0, pmax=0, bmax=0;
+
+  runtimeQuestions.forEach((q,qi)=>{
+    const chosen=q.options[answers[qi]];
+    if(!chosen) return;
+    const s=chosen.scores||{};
+
+    LENSES.forEach(l=>{
+      raw[l]+=s[l]||0;
+      if(q.kind==="Declared") declared[l]+=s[l]||0;
+      if(["Life Evidence","Behavioral"].includes(q.kind)) lived[l]+=s[l]||0;
+    });
+
+    protection+=s.protection||0;
+    borrowed+=s.borrowed||0;
+    pmax+=Math.max(...q.options.map(o=>o.scores.protection||0));
+    bmax+=Math.max(...q.options.map(o=>o.scores.borrowed||0));
+  });
+
+  // Normalize the six internal lenses.
+  const overallLens={}, declaredLens={}, livedLens={};
+  LENSES.forEach(l=>{
+    overallLens[l]=raw[l]/Math.max(1,maxLens(l))*100;
+    const dm=maxLens(l,["Declared"]);
+    const lm=maxLens(l,["Life Evidence","Behavioral"]);
+    declaredLens[l]=dm?declared[l]/dm*100:0;
+    livedLens[l]=lm?lived[l]/lm*100:0;
+  });
+
+  // Translate the internal six-lens model into five plain-English values.
+  const overall=combineFriendly(overallLens);
+  const dec=combineFriendly(declaredLens);
+  const liv=combineFriendly(livedLens);
+
+  const ranked=sortedNames(overall);
+  const topFive=ranked.slice(0,5);
+
+  // Core values headline.
+  $("coreValuesLine").innerHTML=topFive.map(v=>`<span>${v}</span>`).join("");
+
+  // Short interpretation of each.
+  const cards=$("coreValueCards");
+  cards.innerHTML="";
+  topFive.forEach(v=>{
+    const item=document.createElement("div");
+    item.className="value-item";
+    item.innerHTML=`<div class="value-item-top"><div class="value-name">${v}</div><div class="value-score">${Math.round(overall[v])}%</div></div><p class="value-copy">${FRIENDLY[v].copy}</p>`;
+    cards.appendChild(item);
+  });
+
+  // What life is showing: top 2 lived values.
+  const livedRank=sortedNames(liv);
+  const livedTop=livedRank.slice(0,2);
+  $("livedHeadline").textContent=`Your life is currently reinforcing ${sentenceList(livedTop)} most strongly.`;
+  $("livedCopy").textContent="Across the questions about your time, energy, money, organization, attention, reactions, and goals, these values received the clearest behavioral support.";
+  $("livedTags").innerHTML=livedRank.slice(0,3).map(v=>`<span class="tag">${v}</span>`).join("");
+
+  // Biggest declared ↔ lived gap.
+  const gapList=Object.keys(FRIENDLY).map(v=>({name:v,gap:Math.abs(dec[v]-liv[v]),declared:dec[v],lived:liv[v]})).sort((a,b)=>b.gap-a.gap);
+  const g=gapList[0];
+
+  if(g.gap < 10){
+    $("gapHeadline").textContent="Your stated priorities and lived behavior are fairly aligned.";
+    $("gapCopy").textContent=`The largest difference in this snapshot is around ${g.name}, but it is relatively small.`;
+  } else if(g.declared > g.lived){
+    $("gapHeadline").textContent=`${g.name} matters to you more than your current behavior is expressing.`;
+    $("gapCopy").textContent=`You identify with ${g.name}, but your present patterns give it less time, energy, attention, or choice than some of your other priorities.`;
+  } else {
+    $("gapHeadline").textContent=`Your life is emphasizing ${g.name} more than you consciously claim it.`;
+    $("gapCopy").textContent=`Your behavioral responses point strongly toward ${g.name}, even though it is not as prominent in what you consciously say matters.`;
+  }
+
+  // Protective / inherited layer in simple language.
+  const pp=pmax?Math.round(protection/pmax*100):0;
+  const bp=bmax?Math.round(borrowed/bmax*100):0;
+  let driver="";
+  if(pp>=67 && bp>=67){
+    driver="Some of your strongest priorities may be doing double duty: helping you move toward what you want while also protecting you from what you do not want — and a noticeable amount of “should” pressure may be mixed in.";
+  } else if(pp>=67){
+    driver="Some of your strongest priorities appear to be partly protective — not only what you want more of, but what you are strongly trying to avoid losing, repeating, or experiencing.";
+  } else if(bp>=67){
+    driver="A noticeable amount of “should” pressure shows up in this snapshot. Some priorities may be mixed with expectations about who you are supposed to be or what you are supposed to want.";
+  } else if(pp>=34 || bp>=34){
+    driver="There is some evidence that protection and outside expectations may be influencing your priorities, but neither dominates the snapshot.";
+  } else {
+    driver="Your answers show relatively little protective or “should” pressure in the small sample measured here. Your priorities appear more strongly connected to what you consciously choose and enjoy moving toward.";
+  }
+  $("driverCopy").textContent=driver;
+
+  $("courseLink").href = COURSE_URL==="YOUR_COURSE_URL" ? "#" : COURSE_URL;
+
+  $("quiz").classList.add("hidden");
+  $("results").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+$("start").onclick=()=>{
+  $("intro").classList.add("hidden");
+  $("quiz").classList.remove("hidden");
+  render();
+};
+
+$("back").onclick=()=>{
+  if(index>0){index--;render();}
+};
+
+$("restart").onclick=()=>{
+  index=0;
+  answers=[];
+  $("results").classList.add("hidden");
+  $("intro").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+</script>
+</body>
+</html>
